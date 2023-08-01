@@ -1,6 +1,12 @@
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:s19miniapp/models/user.dart';
+import 'package:s19miniapp/screens/login/login.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:s19miniapp/services/appServices.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -33,11 +39,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool passwordVisible = false;
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    passwordVisible = true;
   }
 
   @override
@@ -51,7 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text("Put Logo Here!")],
+            children: [
+              Image(
+                  image: AssetImage("assets/images/MINIAPP.png"),
+                  height: 200,
+                  width: 300),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -60,13 +80,14 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.3,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: const Text("Username"),
+                child: const Text("Username", style: TextStyle(fontSize: 16)),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: 40,
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: usernameController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Enter username',
                   ),
@@ -81,16 +102,31 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.3,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: const Text("Password"),
+                child: const Text(
+                  "Password",
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 height: 40,
-                child: const TextField(
+                child: TextField(
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  obscureText: passwordVisible,
+                  controller: passwordController,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter password',
-                  ),
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter password',
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              passwordVisible = !passwordVisible;
+                            });
+                          },
+                          icon: Icon(passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off))),
                 ),
               )
             ],
@@ -103,30 +139,45 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               SizedBox(
                 width: 100,
-                child: ElevatedButton(onPressed: () {}, child: const Text("Exit")),
+                child: ElevatedButton(
+                    onPressed: () {
+                      SystemNavigator.pop();
+                    },
+                    child: const Text("Exit")),
               ),
               const SizedBox(
                 width: 20,
               ),
               SizedBox(
                 width: 100,
-                child: ElevatedButton(onPressed: () {
-                  log("Test");
-                }, child: const Text("Login")),
+                child: ElevatedButton(
+                    onPressed: () async {
+                      User user = User(
+                          usernameController.text, passwordController.text);
+                      if (await Login.login(user)) {
+                        log("Login success");
+                        AppServices.showToast(Login.message);
+                      } else {
+                        log(Login.message);
+                        AppServices.showToast(Login.message);
+                      }
+                    },
+                    child: const Text("Login")),
               ),
             ],
           ),
-          const Row(
-            children: [Text("Version: 0.0.1")],
-          )
         ],
       ),
       bottomNavigationBar: const BottomAppBar(
         height: 40,
         child: Text("Version 0.0.1"),
       ),
-      floatingActionButton:
-          FloatingActionButton(onPressed: () {}, child: const Text("-")),
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            usernameController.text = 'admin';
+            passwordController.text = 'admin';
+          },
+          child: const Text("-")),
     );
   }
 }
