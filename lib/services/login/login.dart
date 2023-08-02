@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:s19miniapp/models/link_api.dart';
 import 'package:s19miniapp/models/user.dart';
 
 class Login {
   static String message = "";
-  static final String _url =
-      "http://s4training.citek.vn:8085/zservice_ht/login?sap-client=100";
 
   static Future<bool> callLoginApi(User user) async {
-    var url = Uri.parse(_url);
+    String url = LinkApi.getLinkApp('LOGIN');
+    var uri = Uri.parse(url);
     Map jsonData = {"username": user.username, "password": user.password};
     var body = json.encode(jsonData);
     var headers = {
@@ -20,8 +20,8 @@ class Login {
     };
     var client = http.Client();
     try {
-      var response = await client.post(url, headers: headers, body: body);
-      print(response.body.toString());
+      var response = await client.post(uri, headers: headers, body: body);
+      log(response.body.toString());
       if (response.statusCode == 200) {
         var jsonString = response.body.toString();
         Map<String, dynamic> result = jsonDecode(jsonString);
@@ -60,13 +60,7 @@ class Login {
   }
 
   static bool validateUser(User user) {
-    if (user == null) {
-      message = "Username and password cannot null";
-      return false;
-    } else if (user.password == null) {
-      message = "Username and password cannot null";
-      return false;
-    } else if (user.username.trim() == "" || user.password.trim() == "") {
+    if (user.username.trim() == "" || user.password.trim() == "") {
       message = "Username and password cannot null";
       return false;
     }
