@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:s19miniapp/models/user.dart';
-import 'package:s19miniapp/screens/login/login.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:s19miniapp/screens/app_screen.dart';
+import 'package:s19miniapp/screens/navigator.dart';
+import 'package:s19miniapp/services/login/login.dart';
 import 'package:s19miniapp/services/appServices.dart';
 
 void main() {
@@ -13,7 +14,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   obscureText: passwordVisible,
                   controller: passwordController,
                   decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       hintText: 'Enter password',
                       suffixIcon: IconButton(
                           onPressed: () {
@@ -157,6 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (await Login.login(user)) {
                         log("Login success");
                         AppServices.showToast(Login.message);
+                        Navigators.navigateToAppScreen(context);
                       } else {
                         log(Login.message);
                         AppServices.showToast(Login.message);
