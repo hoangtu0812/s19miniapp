@@ -14,6 +14,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -57,117 +58,139 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: [
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image(
-                  image: AssetImage("assets/images/MINIAPP.png"),
-                  height: 200,
-                  width: 300),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Padding(padding: EdgeInsets.symmetric(vertical: 50)),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: const Text("Username", style: TextStyle(fontSize: 16)),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: 40,
-                child: TextField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter username',
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image(
+                    image: AssetImage("assets/images/MINIAPP.png"),
+                    height: 200,
+                    width: 300),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Column(
+                    children: [
+                      Text(
+                        "Login",
+                        style: TextStyle(
+                            color: Color.fromRGBO(49, 39, 79, 1),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30),
+                      )
+                    ],
                   ),
+                  const SizedBox(height: 30),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromRGBO(196, 135, 198, .3),
+                            blurRadius: 20,
+                            offset: Offset(0, 10),
+                          )
+                        ]),
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(color: Colors.grey))),
+                          child: TextField(
+                            controller: usernameController,
+                            decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Enter username',
+                                hintStyle: TextStyle(color: Colors.grey)),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              border: Border(
+                                  bottom: BorderSide(color: Colors.grey))),
+                          child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
+                            textInputAction: TextInputAction.done,
+                            obscureText: passwordVisible,
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Enter password',
+                                hintStyle: TextStyle(color: Colors.grey),
+                                suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        passwordVisible = !passwordVisible;
+                                      });
+                                    },
+                                    icon: Icon(passwordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off))),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Column(
+              children: [
+                Container(
+                  width: screenWidth * 0.5,
+                  height: screenHeight * 0.08,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        User user = User(
+                            usernameController.text, passwordController.text);
+                        if (await Login.login(user)) {
+                          log("Login success");
+                          AppServices.showToast(Login.message);
+                          Navigators.navigateToAppScreen(context);
+                        } else {
+                          log(Login.message);
+                          AppServices.showToast(Login.message);
+                        }
+                      },
+                      child: const Text("Login")),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                      child: const Text("Exit")),
                 ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: const Text(
-                  "Password",
-                  style: TextStyle(fontSize: 16),
+                const SizedBox(
+                  width: 20,
                 ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: 40,
-                child: TextField(
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
-                  obscureText: passwordVisible,
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      hintText: 'Enter password',
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              passwordVisible = !passwordVisible;
-                            });
-                          },
-                          icon: Icon(passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off))),
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                    onPressed: () {
-                      SystemNavigator.pop();
-                    },
-                    child: const Text("Exit")),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                    onPressed: () async {
-                      User user = User(
-                          usernameController.text, passwordController.text);
-                      if (await Login.login(user)) {
-                        log("Login success");
-                        AppServices.showToast(Login.message);
-                        Navigators.navigateToAppScreen(context);
-                      } else {
-                        log(Login.message);
-                        AppServices.showToast(Login.message);
-                      }
-                    },
-                    child: const Text("Login")),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: const BottomAppBar(
         height: 40,

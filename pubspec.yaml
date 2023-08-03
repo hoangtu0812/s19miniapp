@@ -39,6 +39,7 @@ dependencies:
   google_fonts: ^5.1.0
   http: ^1.1.0
   sqflite: ^2.3.0
+  simple_animations: ^5.0.2
 
 dev_dependencies:
   flutter_test:
