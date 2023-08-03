@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:s19miniapp/models/user.dart';
 import 'package:s19miniapp/screens/app_screen.dart';
+import 'package:s19miniapp/screens/colors.dart';
 import 'package:s19miniapp/screens/navigator.dart';
 import 'package:s19miniapp/services/login/login.dart';
 import 'package:s19miniapp/services/appServices.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: CustomColors.themeColor),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Login'),
@@ -61,10 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: CustomColors.themeColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: screenHeight * 0.1),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -74,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 300),
               ],
             ),
+            SizedBox(height: screenHeight * 0.1),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
@@ -108,7 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: const EdgeInsets.all(10),
                           decoration: const BoxDecoration(
                               border: Border(
-                                  bottom: BorderSide(color: Colors.grey))),
+                                  bottom: BorderSide(
+                                      color:
+                                          Color.fromRGBO(196, 135, 198, .3)))),
                           child: TextField(
                             controller: usernameController,
                             decoration: const InputDecoration(
@@ -119,9 +124,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(
-                              border: Border(
-                                  bottom: BorderSide(color: Colors.grey))),
                           child: TextField(
                             keyboardType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
@@ -130,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Enter password',
-                                hintStyle: TextStyle(color: Colors.grey),
+                                hintStyle: const TextStyle(color: Colors.grey),
                                 suffixIcon: IconButton(
                                     onPressed: () {
                                       setState(() {
@@ -149,14 +151,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 50,
             ),
             Column(
               children: [
                 Container(
                   width: screenWidth * 0.5,
-                  height: screenHeight * 0.08,
+                  height: screenHeight * 0.06,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CustomColors.buttonColor
+                    ),
                       onPressed: () async {
                         User user = User(
                             usernameController.text, passwordController.text);
@@ -173,22 +178,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 100,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        SystemNavigator.pop();
-                      },
-                      child: const Text("Exit")),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-              ],
-            ),
+            SizedBox(
+                width: 100,
+                height: 50,
+                child: MaterialButton(
+                  onPressed: () {},
+                  child: const Text('Exit'),
+                )),
           ],
         ),
       ),
