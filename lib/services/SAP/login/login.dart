@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:s19miniapp/models/link_api.dart';
-import 'package:s19miniapp/models/user.dart';
+import 'package:s19miniapp/models/SAP_models/link_api.dart';
+import 'package:s19miniapp/models/SAP_models/user.dart';
 
-class Login {
+class LoginSAP {
   static String message = "";
 
-  static Future<bool> callLoginApi(User user) async {
+  static Future<bool> callLoginApi(UserSAP user) async {
     String url = LinkApi.getLinkApp('LOGIN');
     var uri = Uri.parse(url);
     Map jsonData = {"username": user.username, "password": user.password};
@@ -44,7 +44,7 @@ class Login {
     }
   }
 
-  static Future<bool> login(User user) async {
+  static Future<bool> login(UserSAP user) async {
     log("Username: ${user.username}");
     log("Password: ${user.password}");
     if (validateUser(user)) {
@@ -59,7 +59,7 @@ class Login {
     }
   }
 
-  static bool validateUser(User user) {
+  static bool validateUser(UserSAP user) {
     if (user.username.trim() == "" || user.password.trim() == "") {
       message = "Username and password cannot null";
       return false;

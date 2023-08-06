@@ -2,11 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:s19miniapp/models/user.dart';
-import 'package:s19miniapp/screens/app_screen.dart';
+import 'package:s19miniapp/models/SAP_models/user.dart';
 import 'package:s19miniapp/screens/colors.dart';
 import 'package:s19miniapp/screens/navigator.dart';
-import 'package:s19miniapp/services/login/login.dart';
+import 'package:s19miniapp/services/SAP/login/login.dart';
 import 'package:s19miniapp/services/appServices.dart';
 
 void main() {
@@ -40,17 +39,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   bool passwordVisible = false;
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -151,7 +142,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 30,
+            ),
+            SizedBox(
+                width: 200,
+                height: 50,
+                child: MaterialButton(
+                  onPressed: () {},
+                  child: const Text('Register new account'),
+                )),
+            const SizedBox(
+              height: 20,
             ),
             Column(
               children: [
@@ -163,20 +164,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       backgroundColor: CustomColors.buttonColor
                     ),
                       onPressed: () async {
-                        User user = User(
+                        UserSAP user = UserSAP(
                             usernameController.text, passwordController.text);
-                        if (await Login.login(user)) {
+                        if (await LoginSAP.login(user)) {
                           log("Login success");
-                          AppServices.showToast(Login.message);
+                          AppServices.showToast(LoginSAP.message);
                           Navigators.navigateToAppScreen(context);
                         } else {
-                          log(Login.message);
-                          AppServices.showToast(Login.message);
+                          log(LoginSAP.message);
+                          AppServices.showToast(LoginSAP.message);
                         }
                       },
                       child: const Text("Login")),
                 )
               ],
+            ),
+            const SizedBox(
+              height: 20,
             ),
             SizedBox(
                 width: 100,

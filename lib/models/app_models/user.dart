@@ -1,8 +1,15 @@
 class User {
   String _username;
   String _password;
+  String _email;
 
-  User(this._username, this._password);
+  User(this._username, this._password, this._email);
+
+  String get email => _email;
+
+  set email(String value) {
+    _email = value;
+  }
 
   String get password => _password;
 

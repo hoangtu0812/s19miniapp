@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:s19miniapp/database/connect_database.dart';
 import '../../services/appServices.dart';
 
 class CustomAppContainer extends StatelessWidget {
@@ -61,8 +60,6 @@ class CustomAppInkWell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     return InkWell(
       onTap: () {
         onTapEvent();
